@@ -63,7 +63,7 @@ class TestStaffMasqueradeAsStudent(ModuleStoreTestCase, LoginEnrollmentTestCase)
 
     def test_staff_debug_for_staff(self):
         resp = self.get_cw_section()
-        sdebug = '<div aria-hidden="true"><a href="#i4x_edX_graded_problem_H1P1_debug" id="i4x_edX_graded_problem_H1P1_trig">Staff Debug Info</a></div>'
+        sdebug = '<a  class="instructor-info-action" href="#${element_id}_debug" id="${element_id}_trig">${_("Staff Debug Info")}</a>'
 
         self.assertTrue(sdebug in resp.content)
 

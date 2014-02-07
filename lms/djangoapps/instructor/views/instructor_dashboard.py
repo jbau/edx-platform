@@ -27,7 +27,6 @@ from class_dashboard.dashboard_data import get_section_display_name, get_array_s
 
 from .tools import get_units_with_due_date, title_or_url
 
-
 @ensure_csrf_cookie
 @cache_control(no_cache=True, no_store=True, must_revalidate=True)
 def instructor_dashboard_2(request, course_id):
@@ -61,7 +60,7 @@ def instructor_dashboard_2(request, course_id):
 
     # Gate access to course email by feature flag & by course-specific authorization
     if settings.FEATURES['ENABLE_INSTRUCTOR_EMAIL'] and \
-       is_studio_course and CourseAuthorization.instructor_email_enabled(course_id):
+        is_studio_course and CourseAuthorization.instructor_email_enabled(course_id):
         sections.append(_section_send_email(course_id, access, course))
 
     # Gate access to Metrics tab by featue flag and staff authorization

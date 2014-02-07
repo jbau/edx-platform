@@ -323,3 +323,24 @@ def get_cms_course_link(course):
         course.location.course_id, course.location, False, True
     )
     return "//" + settings.CMS_BASE + locator.url_reverse('course/', '')
+
+def get_cms_block_link(block, page):
+    """
+    Returns a link to block_index for editing the course in cms,
+    assuming that the block is actually cms-backed.
+    """
+    locator = loc_mapper().translate_location(
+        block.location.course_id, block.location, False, True
+    )
+    return "//" + settings.CMS_BASE + locator.url_reverse(page, '')
+
+def get_studio_url(course_id, page):
+    """
+    Get the Studio URL of the page that is passed in.
+    """
+    is_studio_course = (modulestore().get_modulestore_type(course_id) == MONGO_MODULESTORE_TYPE)
+    studio_link = None
+    course  = get_course_by_id(course_id)
+    if is_studio_course:
+      studio_link = get_cms_block_link(course, page)
+    return studio_link

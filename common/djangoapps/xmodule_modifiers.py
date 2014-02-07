@@ -17,6 +17,7 @@ from xmodule.seq_module import SequenceModule
 from xmodule.vertical_module import VerticalModule
 from xmodule.x_module import shim_xmodule_js, XModuleDescriptor, XModule
 from lms.lib.xblock.runtime import quote_slashes
+from xmodule.modulestore.django import loc_mapper
 
 log = logging.getLogger(__name__)
 
@@ -152,7 +153,7 @@ def grade_histogram(module_id):
     return grades
 
 
-def add_staff_debug_info(user, block, view, frag, context):  # pylint: disable=unused-argument
+def add_staff_markup(user, block, view, frag, context):  # pylint: disable=unused-argument
     """
     Updates the supplied module with a new get_html function that wraps
     the output of the old get_html function with additional information
@@ -162,7 +163,15 @@ def add_staff_debug_info(user, block, view, frag, context):  # pylint: disable=u
     Does nothing if module is a SequenceModule or a VerticalModule.
     """
     # TODO: make this more general, eg use an XModule attribute instead
-    if isinstance(block, (SequenceModule, VerticalModule)):
+    if isinstance(block, VerticalModule):
+        # get relative url/location of unit in CMS
+        locator = loc_mapper().translate_location(block.course_id, block.location, False, True)
+        # build edit link to unit in CMS
+        edit_link = "//" + settings.CMS_BASE + locator.url_reverse('unit', '')
+        # return edit link in rendered HTML for display
+        return wrap_fragment(frag, render_to_string("edit_unit_link.html", {'frag_content': frag.content, 'edit_link': edit_link}))
+
+    if isinstance(block, SequenceModule):
         return frag
 
     block_id = block.id
