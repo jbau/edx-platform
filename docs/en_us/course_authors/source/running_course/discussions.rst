@@ -110,7 +110,7 @@ You can designate a team of people to help you run course discussions. Different
 
 Before you can assign roles to your discussion administrators, you need their email addresses or usernames. 
 
-* To get this information for a staff member, on the Instructor Dashboard click **Membership** and then select Course Staff from the drop-down list.
+* To get this information for a staff member, on the Instructor Dashboard click **Membership** and then select **Course Staff** from the drop-down list.
 * To get this information for an enrolled student, on the Instructor Dashboard click **Data Download** > **Download profile information as a CSV**.
 
 **Tip**: These instructions are for the new Instructor Dashboard: click **Try New Beta Dashboard**.
@@ -127,7 +127,7 @@ To assign a role:
 
 #. Under the list of users who currently have that role, enter an email address or username and click **Add** for the role type.
 
-#. To remove an assigned role, view the list of users and then click **Revoke access** next to the individual's username and email address.
+#. To remove an assigned role, view the list of users and then click **Revoke access**.
 
 .. _Running_discussions:
 
@@ -147,9 +147,9 @@ You can also post anonymously. Regardless of your role, you can choose to make a
 
 * To identify your posts with your role, log in with your discussion administrator email address and add the post or response. The responses and comments that you make include a colored banner with either "Staff" or "Community TA".
  
-* To post as a student, you must set up an alternate account with a different email address, go to the course URL and register, and then join the discussion. Reponses and comments do not have a banner and appear like any other student post. 
+* To post as a student, you must set up an alternate account with a different email address, go to the course URL and register, and then join the discussion. When you post as a student, your responses and comments do not have a banner or other distinguishing features: they appear the same as any other student post.
 
-**Note**: Posts by discussion administrators do not include a colored "Staff" or "Community TA" banner. Only responses to posts and comments made on responses do.
+**Note**: Posts by discussion administrators do not include a colored "Staff" or "Community TA" banner. The colored banner appears only when discussion administrators respond to existing posts or make a comment.
 
 ==========================================
 Use conventions in discussion subjects

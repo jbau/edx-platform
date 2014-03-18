@@ -194,7 +194,7 @@ To add a beta tester:
 
   * If you add beta testers before the test starts, they do not see your course. You may need to remind them when the test begins. 
 
-To remove the Beta Testers role, view the list of beta testers and then click **Revoke access** next to the individual's username and email address. 
+To remove the Beta Testers role, view the list of beta testers and then click **Revoke access**. 
 
 .. _Issue_Reporting_During_Course:
 
