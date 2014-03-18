@@ -13,26 +13,32 @@ def go_to_static(step):
     world.css_click(static_css)
 
 
-@step(u'I add a new page$')
+@step(u'I add a new static page$')
 def add_page(step):
     button_css = 'a.new-button'
     world.css_click(button_css)
 
 
-@step(u'I should see a page named "([^"]*)"$')
+@step(u'I should see a static page named "([^"]*)"$')
 def see_a_static_page_named_foo(step, name):
     pages_css = 'div.xmodule_StaticTabModule'
     page_name_html = world.css_html(pages_css)
     assert_equal(page_name_html, '\n    {name}\n'.format(name=name))
 
 
-@step(u'I should not see any pages$')
+@step(u'I should not see any static pages$')
 def not_see_any_static_pages(step):
     pages_css = 'div.xmodule_StaticTabModule'
     assert (world.is_css_not_present(pages_css, wait_time=30))
 
 
-@step(u'I "(edit|delete)" the page$')
+@step(u'I should see a built-in page named "([^"]*)" at position (\d+)$' )
+def see_a_built_in_page_named_foo(step, name, tab_pos_str):
+    tab_pos = int(tab_pos_str)
+    page_name = world.css_text("div.course-nav-tab-header h3.title", index=tab_pos)
+    assert (page_name == name)
+
+@step(u'I "(edit|delete)" the static page$')
 def click_edit_or_delete(step, edit_or_delete):
     button_css = 'ul.component-actions a.%s-button' % edit_or_delete
     world.css_click(button_css)
@@ -50,7 +56,7 @@ def change_name(step, new_name):
     world.css_click(save_button)
 
 
-@step(u'I reorder the tabs')
+@step(u'I reorder the static tabs')
 def reorder_tabs(_step):
     # For some reason, the drag_and_drop method did not work in this case.
     draggables = world.css_find('.component .drag-handle')
@@ -61,24 +67,29 @@ def reorder_tabs(_step):
     source.action_chains.release().perform()
 
 
-@step(u'I have created a page')
+@step(u'I have created a static page')
+def create_static_page(step):
+    step.given('I have opened the pages page in a new course')
+    step.given('I add a new static page')
+
+
+@step(u'I have opened the pages page in a new course')
 def create_static_page(step):
     step.given('I have opened a new course in Studio')
     step.given('I go to the pages page')
-    step.given('I add a new page')
 
 
-@step(u'I have created two different pages')
+@step(u'I have created two different static pages')
 def create_two_pages(step):
-    step.given('I have created a page')
-    step.given('I "edit" the page')
+    step.given('I have created a static page')
+    step.given('I "edit" the static page')
     step.given('I change the name to "First"')
-    step.given('I add a new page')
+    step.given('I add a new static page')
     # Verify order of tabs
     _verify_tab_names('First', 'Empty')
 
 
-@step(u'the tabs are in the reverse order')
+@step(u'the static tabs are in the reverse order')
 def tabs_in_reverse_order(step):
     _verify_tab_names('Empty', 'First')
 

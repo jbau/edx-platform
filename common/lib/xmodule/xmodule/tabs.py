@@ -49,7 +49,6 @@ class CourseTab(object):  # pylint: disable=incomplete-protocol
         # indicates whether the tab can be hidden for a particular course
         self.is_hideable = False
 
-
     def can_display(self, course, is_user_authenticated, is_user_staff):  # pylint: disable=unused-argument
         """
         Determines whether the tab should be displayed in the UI for the given course and a particular user.

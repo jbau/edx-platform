@@ -2,7 +2,6 @@
 
 from contentstore.views import tabs
 from django.test import TestCase
-from xmodule import tabs as xblock_tabs
 from xmodule.modulestore.tests.factories import CourseFactory
 from courseware.courses import get_course_by_id
 

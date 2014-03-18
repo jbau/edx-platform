@@ -362,14 +362,15 @@ def index(request, course_id, chapter=None, section=None,
         if settings.DEBUG:
             raise
         else:
-            log.exception("Error in index view: user={user}, course={course},"
-                          " chapter={chapter} section={section}"
-                          "position={position}".format(
-                user=user,
-                course=course,
-                chapter=chapter,
-                section=section,
-                position=position
+            log.exception(
+                "Error in index view: user={user}, course={course},"
+                " chapter={chapter} section={section}"
+                "position={position}".format(
+                    user=user,
+                    course=course,
+                    chapter=chapter,
+                    section=section,
+                    position=position
             ))
             try:
                 result = render_to_response('courseware/courseware-error.html', {
@@ -484,7 +485,7 @@ def static_tab(request, course_id, tab_slug):
     if tab is None:
         raise Http404
 
-    contents = _get_static_tab_contents(
+    contents = get_static_tab_contents(
         request,
         course,
         tab
@@ -744,6 +745,7 @@ def submission_history(request, course_id, student_username, location):
 
     return render_to_response('courseware/submission_history.html', context)
 
+
 def notification_image_for_tab(course_tab, user, course):
     """
     Returns the notification image path for the given course_tab if applicable, otherwise None.
@@ -762,27 +764,28 @@ def notification_image_for_tab(course_tab, user, course):
 
     return None
 
-def _get_static_tab_contents(request, course, static_tab):
+
+def get_static_tab_contents(request, course, tab):
     """
-    Returns the contents for the given static_tab
+    Returns the contents for the given static tab
     """
     loc = Location(
         course.location.tag,
         course.location.org,
         course.location.course,
-        static_tab.type,
-        static_tab.url_slug
+        tab.type,
+        tab.url_slug,
     )
-    field_data_cache = FieldDataCache.cache_for_descriptor_descendents(course.id,
-        request.user, modulestore().get_instance(course.id, loc), depth=0)
-    tab_module = get_module(request.user, request, loc, field_data_cache, course.id,
-                            static_asset_path=course.static_asset_path)
+    field_data_cache = FieldDataCache.cache_for_descriptor_descendents(
+        course.id, request.user, modulestore().get_instance(course.id, loc), depth=0
+    )
+    tab_module = get_module(
+        request.user, request, loc, field_data_cache, course.id, static_asset_path=course.static_asset_path
+    )
 
     logging.debug('course_module = {0}'.format(tab_module))
 
     html = ''
-
     if tab_module is not None:
         html = tab_module.render('student_view').content
-
     return html

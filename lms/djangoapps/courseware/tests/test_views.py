@@ -424,3 +424,4 @@ class StartDateTests(ModuleStoreTestCase):
         text = self.get_about_text('edX/toy/TT_2012_Fall')
         # The start date is set in common/test/data/two_toys/policies/TT_2012_Fall/policy.json
         self.assertIn("2015-JULY-17", text)
+
