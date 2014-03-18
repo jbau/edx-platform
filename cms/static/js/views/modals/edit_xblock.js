@@ -1,7 +1,8 @@
 define(["jquery", "underscore", "underscore.string", "gettext", "js/views/baseview", "js/views/feedback_notification",
-        "js/views/xblock", "js/models/xblock_info", "js/views/metadata", "js/collections/metadata"],
+        "js/models/xblock_info", "js/views/xblock", "js/views/xblock_editor",
+        "js/views/metadata", "js/collections/metadata"],
     function($, _, str, gettext, BaseView, NotificationView,
-             XBlockView, XBlockInfo, MetadataView, MetadataCollection) {
+             XBlockInfo, XBlockView, XBlockEditorView, MetadataView, MetadataCollection) {
         var EditXBlockModal = BaseView.extend({
             events : {
                 "click .action-save": "save",
@@ -17,12 +18,8 @@ define(["jquery", "underscore", "underscore.string", "gettext", "js/views/basevi
                 icon: false
             }),
 
-            constructor: function(options) {
-                BaseView.prototype.constructor.apply(this, arguments);
-                this.view = options.view;
-            },
-
             initialize: function() {
+                this.view = this.options.view;
                 this.template = _.template($("#edit-xblock-modal-tpl").text());
             },
 
@@ -32,12 +29,10 @@ define(["jquery", "underscore", "underscore.string", "gettext", "js/views/basevi
                     xblockInfo = this.xblockInfo,
                     success = options ? options.success : null;
                 this.$el.html(this.template());
-                editorView = new XBlockView({
+                editorView = new XBlockEditorView({
                     el: this.$('.xblock-editor'),
-                    model: xblockInfo,
-                    view: 'studio_view'
+                    model: xblockInfo
                 });
-                this.editorView = editorView;
                 editorView.render({
                     success: function() {
                         if (success) {

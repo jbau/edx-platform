@@ -236,6 +236,7 @@ def xblock_view_handler(request, package_id, view_name, tag=None, branch=None, v
             context = {
                 'runtime_type': 'studio',
                 'container_view': is_container_view,
+                'is_draft': is_draft,
                 'read_only': is_read_only_view,
                 'root_xblock': component,
             }

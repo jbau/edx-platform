@@ -11,27 +11,40 @@ define(["jquery", "underscore", "js/views/baseview", "xblock/runtime.v1"],
 
             render: function(options) {
                 var self = this,
-                    view = this.view;
+                    view = this.view,
+                    xblockInfo = this.model,
+                    xblockUrl = xblockInfo.url();
                 return $.ajax({
-                    url: decodeURIComponent(this.model.url()) + "/" + view,
+                    url: decodeURIComponent(xblockUrl) + "/" + view,
                     type: 'GET',
-                    headers: {
-                        Accept: 'application/json'
-                    },
+                    headers: { Accept: 'application/json' },
                     success: function(fragment) {
-                        var wrapper = self.$el,
-                            xblockElement,
-                            success = options ? options.success : null;
-                        self.renderXBlockFragment(fragment, wrapper);
-                        xblockElement = self.$('.xblock').first();
-                        self.xblock = XBlock.initializeBlock(xblockElement);
-                        if (success) {
-                            success();
-                        }
+                        self.handleXBlockFragment(fragment, options);
                     }
                 });
             },
 
+            handleXBlockFragment: function(fragment, options) {
+                var wrapper = this.$el,
+                    xblockElement,
+                    success = options ? options.success : null,
+                    xblock;
+                this.renderXBlockFragment(fragment, wrapper);
+                xblockElement = this.$('.xblock').first();
+                xblock = XBlock.initializeBlock(xblockElement);
+                this.xblock = xblock;
+                this.xblockReady(xblock);
+                if (success) {
+                    success(xblock);
+                }
+            },
+
+            /**
+             * This method is called upon successful rendering of an xblock.
+             */
+            xblockReady: function(xblock) {
+                // Do nothing
+            },
 
             /**
              * Renders an xblock fragment into the specifed element. The fragment has two attributes:

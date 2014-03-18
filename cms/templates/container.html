@@ -13,7 +13,7 @@ from django.utils.translation import ugettext as _
 
 
 <%block name="header_extras">
-% for template_name in ["edit-xblock-modal"]:
+% for template_name in ["no-content", "edit-xblock-modal"]:
 <script type="text/template" id="${template_name}-tpl">
     <%static:include path="js/${template_name}.underscore" />
 </script>
@@ -29,45 +29,19 @@ main_xblock_info = {
 };
 %>
 <script type='text/javascript'>
-    require(["domReady!", "jquery", "js/models/xblock_info", "js/views/xblock", "js/views/modals/edit_xblock",
-            "js/models/module_info", "coffee/src/views/unit",
+    require(["domReady!", "jquery", "js/models/xblock_info", "js/views/xblock_container",
             "xmodule", "coffee/src/main", "xblock/cms.runtime.v1",
             "js/views/metadata", "js/collections/metadata"],
-            function(doc, $, XBlockInfo, XBlockView, EditXBlockModal) {
-                var self = this,
-                    view,
-                    addButtonActions,
-                    mainXBlockInfo,
-                    viewName = 'container_preview';
+            function(doc, $, XBlockInfo, XBlockContainerView) {
+                var view, mainXBlockInfo;
 
                 mainXBlockInfo = new XBlockInfo(${json.dumps(main_xblock_info) | n});
 
-                this.addButtonActions = function(element) {
-                    element.find('.edit-button').click(function(event) {
-                        var modal = new EditXBlockModal({
-                            el: $('.edit-xblock-modal'),
-                            view: viewName
-                        });
-                        modal.edit(event, mainXBlockInfo,
-                                {
-                                    success: function(element) {
-                                        // Add buttons on the newly added XBlock
-                                        self.addButtonActions(element);
-                                    }
-                                });
-                    });
-                };
-
-                view = new XBlockView({
+                view = new XBlockContainerView({
                     el: $('.wrapper-xblock.level-page').first(),
-                    model: mainXBlockInfo,
-                    view: viewName
+                    model: mainXBlockInfo
                 });
-                view.render({
-                    success: function() {
-                        self.addButtonActions(view.$el);
-                    }
-                });
+                view.render();
             });
 </script>
 
