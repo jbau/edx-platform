@@ -13,7 +13,7 @@ class TestAnalyticsBasic(TestCase):
     """ Test basic analytics functions. """
 
     def setUp(self):
-        self.course_id = 'some/robot/course/id'
+        self.course_id = 'robot/course/id'
         self.users = tuple(UserFactory() for _ in xrange(30))
         self.ces = tuple(CourseEnrollment.enroll(user, self.course_id)
                          for user in self.users)

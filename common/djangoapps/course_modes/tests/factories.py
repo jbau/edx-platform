@@ -1,5 +1,6 @@
 from course_modes.models import CourseMode
 from factory.django import DjangoModelFactory
+from xmodule.modulestore.keys import CourseKey
 
 
 # Factories don't have __init__ methods, and are self documenting
@@ -8,6 +9,7 @@ class CourseModeFactory(DjangoModelFactory):
     FACTORY_FOR = CourseMode
 
     course_id = u'MITx/999/Robot_Super_Course'
+    course_key = DjangoModelFactory.LazyAttribute(lambda a: CourseKey.from_string(a.course_id))
     mode_slug = 'audit'
     mode_display_name = 'audit course'
     min_price = 0
