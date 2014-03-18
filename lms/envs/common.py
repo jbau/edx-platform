@@ -562,6 +562,7 @@ LANGUAGES = (
     ('lt-lt', u'Lietuvių (Lietuva)'),  # Lithuanian (Lithuania)
     ('ml', u'മലയാളം'),  # Malayalam
     ('mn', u'Монгол хэл'),  # Mongolian
+    ('ms', u'Bahasa Melayu'),  # Malay
     ('nb', u'Norsk bokmål'),  # Norwegian Bokmål
     ('ne', u'नेपाली'),  # Nepali
     ('nl-nl', u'Nederlands (Nederland)'),  # Dutch (Netherlands)
