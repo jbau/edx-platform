@@ -22,7 +22,7 @@ from django.utils.translation import ugettext as _
 
 <%block name="jsextra">
 <%
-xblock_info = {
+main_xblock_info = {
     'id': str(xblock_locator),
     'display-name': xblock.display_name_with_default,
     'category': xblock.category,
@@ -36,20 +36,20 @@ xblock_info = {
             function(doc, $, XBlockInfo, XBlockView, EditXBlockModal) {
                 var view,
                     addButtonActions,
-                    xblockInfo;
+                    mainXBlockInfo;
 
-                xblockInfo = new XBlockInfo(${json.dumps(xblock_info) | n});
+                mainXBlockInfo = new XBlockInfo(${json.dumps(main_xblock_info) | n});
 
                 addButtonActions = function() {
                     $('.edit-button').click(function(event) {
                         var modal = new EditXBlockModal({el: $('.edit-xblock-modal')});
-                        modal.edit(event, xblockInfo);
+                        modal.edit(event, mainXBlockInfo);
                     });
                 };
 
                 view = new XBlockView({
                     el: $('.wrapper-xblock.level-page').first(),
-                    model: xblockInfo,
+                    model: mainXBlockInfo,
                     view: 'container_preview'
                 });
                 view.render({ success: addButtonActions });

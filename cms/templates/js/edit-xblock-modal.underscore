@@ -9,8 +9,8 @@
             <div class="modal-header">
                 <h2 class="title dialog-edit-sectionrelease-title"><%= gettext("Edit Component") %></h2>
                 <ul class="action-list action-modes">
-                    <li class="action-item" data-mode="editor"><a href="#"><%= gettext("Editor") %></a></li>
-                    <li class="action-item" data-mode="settings"><a href="#"><%= gettext("Settings") %></a></li>
+                    <li class="action-item" data-mode="editor"><a href="#" class="editor-button"><%= gettext("Editor") %></a></li>
+                    <li class="action-item" data-mode="settings"><a href="#" class="settings-button"><%= gettext("Settings") %></a></li>
                 </ul>
             </div>
             <div class="form-content">
@@ -20,7 +20,7 @@
                 <h3 class="sr"><%= gettext("Form Actions") %></h3>
                 <ul>
                 <li class="action-item">
-                    <a href="#" class="button action-primary action-add"><%= gettext("Add") %></a>
+                    <a href="#" class="button action-primary action-save"><%= gettext("Save") %></a>
                 </li>
                 <li class="action-item">
                     <a href="#" class="button action-secondary action-cancel"><%= gettext("Cancel") %></a>

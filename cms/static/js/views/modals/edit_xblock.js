@@ -80,14 +80,24 @@ define(["jquery", "underscore", "underscore.string", "gettext", "js/views/basevi
 
             selectMode: function(mode) {
                 var showEditor = mode === 'editor',
-                    editorView = this.editorView,
-                    settingsView = this.settingsView;
+                    dataEditor,
+                    editorModeButton,
+                    settingsEditor,
+                    settingsModeButton;
+                dataEditor = this.$('.wrapper-comp-editor');
+                settingsEditor = this.$('.wrapper-comp-settings');
+                editorModeButton = this.$('.editor-button');
+                settingsModeButton = this.$('.settings-button');
                 if (showEditor) {
-                    editorView.$el.show();
-                    settingsView.$el.hide();
+                    dataEditor.removeClass('is-inactive');
+                    editorModeButton.addClass('is-set');
+                    settingsEditor.removeClass('is-active');
+                    settingsModeButton.removeClass('is-set');
                 } else {
-                    settingsView.$el.show();
-                    editorView.$el.hide();
+                    dataEditor.addClass('is-inactive');
+                    editorModeButton.removeClass('is-set');
+                    settingsEditor.addClass('is-active');
+                    settingsModeButton.addClass('is-set');
                 }
             },
 
