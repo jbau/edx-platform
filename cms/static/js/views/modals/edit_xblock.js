@@ -1,9 +1,10 @@
-define(["jquery", "underscore", "underscore.string", "gettext", "js/views/baseview",
-    "js/views/xblock", "js/models/xblock_info", "js/views/metadata", "js/collections/metadata"],
-    function($, _, str, gettext, BaseView, XBlockView, XBlockInfo, MetadataView, MetadataCollection) {
+define(["jquery", "underscore", "underscore.string", "gettext", "js/views/baseview", "js/views/feedback_notification",
+        "js/views/xblock", "js/models/xblock_info", "js/views/metadata", "js/collections/metadata"],
+    function($, _, str, gettext, BaseView, NotificationView,
+             XBlockView, XBlockInfo, MetadataView, MetadataCollection) {
         var EditXBlockModal = BaseView.extend({
             events : {
-                "click .action-add": "add",
+                "click .action-save": "save",
                 "click .action-cancel": "cancel",
                 "click .action-modes a": "changeMode"
             },
@@ -15,6 +16,11 @@ define(["jquery", "underscore", "underscore.string", "gettext", "js/views/basevi
                 closeIcon: false,
                 icon: false
             }),
+
+            constructor: function(options) {
+                BaseView.prototype.constructor.apply(this, arguments);
+                this.view = options.view;
+            },
 
             initialize: function() {
                 this.template = _.template($("#edit-xblock-modal-tpl").text());
@@ -37,6 +43,7 @@ define(["jquery", "underscore", "underscore.string", "gettext", "js/views/basevi
                         if (success) {
                             success();
                         }
+                        self.xblock = editorView.xblock;
                         self.createMetadataView();
                     }
                 });
@@ -47,7 +54,7 @@ define(["jquery", "underscore", "underscore.string", "gettext", "js/views/basevi
                     metadataData = metadataEditor.data('metadata'),
                     models = [],
                     key,
-                    xblock = this.editorView.xblock;
+                    xblock = this.xblock;
                 for (key in metadataData) {
                     if (metadataData.hasOwnProperty(key)) {
                         models.push(metadataData[key]);
@@ -106,25 +113,27 @@ define(["jquery", "underscore", "underscore.string", "gettext", "js/views/basevi
                 this.hide();
             },
 
-            edit: function(event, rootXBlockInfo) {
-                var self = this,
-                    dataElement = $(event.target).closest('[data-locator]');
+            edit: function(event, rootXBlockInfo, options) {
                 event.preventDefault();
-                this.xblockInfo = this.findXBlockInfo(event, rootXBlockInfo);
+                this.xblockElement = this.findXBlockElement(event);
+                this.xblockInfo = this.findXBlockInfo(this.xblockElement, rootXBlockInfo);
+                this.editOptions = options;
                 this.render({
                     success: _.bind(this.show, this)
                 });
             },
 
-            findXBlockInfo: function(event, defaultXBlockInfo) {
-                var self = this,
-                    dataElement = $(event.target).closest('[data-locator]'),
-                    xblockInfo = defaultXBlockInfo;
-                if (dataElement.length > 0) {
+            findXBlockElement: function(event) {
+                return $(event.target).closest('[data-locator]');
+            },
+
+            findXBlockInfo: function(xblockElement, defaultXBlockInfo) {
+                var xblockInfo = defaultXBlockInfo;
+                if (xblockElement.length > 0) {
                     xblockInfo = new XBlockInfo({
-                        'id': dataElement.data('locator'),
-                        'display-name': dataElement.data('display-name'),
-                        'category': dataElement.data('category')
+                        'id': xblockElement.data('locator'),
+                        'display-name': xblockElement.data('display-name'),
+                        'category': xblockElement.data('category')
                     });
                 }
                 return xblockInfo;
@@ -138,6 +147,47 @@ define(["jquery", "underscore", "underscore.string", "gettext", "js/views/basevi
             hide: function() {
                 $('body').removeClass('dialog-is-shown');
                 this.$('.wrapper-dialog-edit-xblock').removeClass('is-shown');
+            },
+
+            save: function(event) {
+                var data,
+                    saving,
+                    self = this,
+                    xblock = this.xblock,
+                    xblockInfo = this.xblockInfo,
+                    settingsView = this.settingsView;
+                event.preventDefault();
+                data = xblock.save();
+                analytics.track("Saved Module", {
+                    course: course_location_analytics,
+                    id: xblock.id
+                });
+                data.metadata = _.extend(data.metadata || {}, settingsView.getModifiedMetadataValues());
+                saving = new NotificationView.Mini({
+                    title: gettext('Saving&hellip;')
+                });
+                saving.show();
+                return xblockInfo.save(data).done(function() {
+                    self.refreshChild({
+                        success: function() {
+                            var success = self.editOptions.success;
+                            self.hide();
+                            saving.hide();
+                            if (success) {
+                                success(self.xblockElement);
+                            }
+                        }
+                    });
+                });
+            },
+
+            refreshChild: function(options) {
+                var xblockView = new XBlockView({
+                    el: this.xblockElement,
+                    model: this.xblockInfo,
+                    view: this.view
+                });
+                xblockView.render(options);
             }
         });
 

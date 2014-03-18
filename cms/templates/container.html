@@ -34,25 +34,40 @@ main_xblock_info = {
             "xmodule", "coffee/src/main", "xblock/cms.runtime.v1",
             "js/views/metadata", "js/collections/metadata"],
             function(doc, $, XBlockInfo, XBlockView, EditXBlockModal) {
-                var view,
+                var self = this,
+                    view,
                     addButtonActions,
-                    mainXBlockInfo;
+                    mainXBlockInfo,
+                    viewName = 'container_preview';
 
                 mainXBlockInfo = new XBlockInfo(${json.dumps(main_xblock_info) | n});
 
-                addButtonActions = function() {
-                    $('.edit-button').click(function(event) {
-                        var modal = new EditXBlockModal({el: $('.edit-xblock-modal')});
-                        modal.edit(event, mainXBlockInfo);
+                this.addButtonActions = function(element) {
+                    element.find('.edit-button').click(function(event) {
+                        var modal = new EditXBlockModal({
+                            el: $('.edit-xblock-modal'),
+                            view: viewName
+                        });
+                        modal.edit(event, mainXBlockInfo,
+                                {
+                                    success: function(element) {
+                                        // Add buttons on the newly added XBlock
+                                        self.addButtonActions(element);
+                                    }
+                                });
                     });
                 };
 
                 view = new XBlockView({
                     el: $('.wrapper-xblock.level-page').first(),
                     model: mainXBlockInfo,
-                    view: 'container_preview'
+                    view: viewName
                 });
-                view.render({ success: addButtonActions });
+                view.render({
+                    success: function() {
+                        self.addButtonActions(view.$el);
+                    }
+                });
             });
 </script>
 
