@@ -390,9 +390,11 @@ class VideoModule(VideoFields, XModule):
                     If language_id is set, remove transcripts file only for language_id, else remove all
                     transcript files which names are in self.transcripts.
                 `POST`:
-                    Upload srt file. Think about generation of proper sjson files. Renames srt file.
-                    For now, works only for self.transcripts, not for `en`.
-                    language_id shoudl be in url
+                    Upload srt file. Check possibility of generation of proper sjson files.
+                    Rename uploaded srt file according to transcript format.
+                    For now, it works only for self.transcripts, not for `en`.
+                    language_id should be in url
+                    Do not update self.transcripts, as fields are updated on save in Studio.
                 `GET:
                     Provide translation for requested language, SJSON format is sent back on success,
                     Proper language_id should be in url.
